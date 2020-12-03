@@ -1,7 +1,7 @@
 <?php
 
 declare(strict_types=1);
-
+session_start();
 function obtenerPdoConexionBD(): PDO
 {
     $servidor = "localhost";
@@ -31,14 +31,14 @@ function obtenerUsuario(string $identificador, string $contrasenna): ?array
 	$sql = 'SELECT * FROM Usuario WHERE identificador =? AND contrasenna =?';
 	$consulta = $conexionBD->prepare($sql);
 	//ejecutamos la consulta
-	$sql->execute([$identificador, $contrasenna]);
-	$rs = $sentencia->fetchALL();
+	$consulta->execute([$identificador, $contrasenna]);
+	$rs = $consulta->fetchAll();
 
-	if($query->rowCount()){
-		 return $user = array('id'=> rs[0]['id'], 'identificador' => rs[0]['identificador'],'contrasenna' => rs[0]['contrasenna'],'logeado' => true);
+	if($consulta->rowCount()==1){
+		 return $user = array('id'=> $rs[0]['id'], 'identificador' => $rs[0]['identificador'],'contrasenna' => $rs[0]['contrasenna']);
 	}
 	else{
-		return $user = array('logeado' => false) ;
+		return null;
 	}
     // TODO Pendiente hacer.
 
@@ -53,11 +53,11 @@ function obtenerUsuario(string $identificador, string $contrasenna): ?array
 
 function marcarSesionComoIniciada(array $arrayUsuario)
 {	
-	session_start();
-	$arrayUsuario=[];
+	
+	
 	$_SESSION["id"]= $arrayUsuario['id'];
 	$_SESSION["identificador"]= $arrayUsuario['identificador'];
-	return $arrayUsuario;
+	
     // TODO Anotar en el post-it todos estos datos:
     // $_SESSION["id"] = ...
     // $_SESSION["identificador"] = ...
@@ -66,6 +66,7 @@ function marcarSesionComoIniciada(array $arrayUsuario)
 
 function haySesionIniciada(): bool
 {
+    
 	if (isset($_SESSION["id"])) {
 		
 		return true;
