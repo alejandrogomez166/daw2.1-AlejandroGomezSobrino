@@ -24,7 +24,8 @@ llamad a los campos IGUAL que en la BD:
 	<input type="text" name="contrasenna">
 	<input type="submit" value="enviar">
 </form>
-
+<br>
+<a href="CrearUsuario.php">¿No tiene usuario?, cree uno aquí.</a>
 
 </body>
 

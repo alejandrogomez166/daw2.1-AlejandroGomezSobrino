@@ -104,3 +104,38 @@ function syso(string $contenido)
 {
     file_put_contents('php://stderr', $contenido . "\n");
 }
+function comprobarUsuario(string $usuario): bool
+{
+    $conexionBD= obtenerPdoConexionBD();
+    $sql = 'SELECT * FROM Usuario WHERE identificador=? ';
+    $consulta = $conexionBD->prepare($sql);
+    $consulta->execute([$usuario]);
+    $rs = $consulta->fetchAll();
+    if($consulta->rowCount()==1){
+         return true;
+    }
+    else{
+        return false;
+    }
+
+}
+function crearUsuario(int $id,string $usuario,string $contrasenna,string $nombre,string $apellido)
+{
+    $conexionBD= obtenerPdoConexionBD();
+    $sql = 'INSERT INTO `Usuario` (`id`, `identificador`, `contrasenna`, `codigoCookie`, `tipoUsuario`, `nombre`, `apellidos`) VALUES
+(?, ?,?, NULL, 0, ?,?)';
+    $consulta = $conexionBD->prepare($sql);
+    $consulta->execute([$id,$usuario,$contrasenna,$nombre,$apellido]);
+    $rs = $consulta->fetchAll();
+
+}
+function dameID()
+{
+    $conexionBD= obtenerPdoConexionBD();
+    $sql = 'SELECT MAX(id) FROM Usuario';
+    $consulta = $conexionBD->prepare($sql);
+    $consulta->execute();
+    $rs = $consulta->fetch();
+    $id=$rs[0];
+    echo $id;
+}
